@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.frontend')
+@section('content')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Product</title>
-</head>
-
-<body>
     <h1>
         <a style="color:navy" href="{{ url('', []) }}">{{"<== "}}Back</a>
     </h1>
@@ -16,7 +8,6 @@
     <p>
         harga : {{$product->harga}}
     </p>
- 
     <button onclick="goTo('{{ url('product/'.$product->id.'/edit', []) }}')">
         Tambahkan ke keranjang
     </button>
@@ -33,13 +24,5 @@
     @php $i++;
     @endphp 
     @endforeach 
+    @endsection
     
-<script>
-    function goTo(url){
-        window.location.replace(url);
-    }
-</script>
-    
-</body>
-
-</html>

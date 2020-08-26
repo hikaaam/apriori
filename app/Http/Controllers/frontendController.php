@@ -16,8 +16,7 @@ class frontendController extends Controller
     public function index()
     {
         $data = product::all();
-        $cart = transaction::where("status",0)->get();
-        return view("frontend.index",compact('data','cart'));
+        return view("frontend.index",compact('data'));
     }
 
     /**
@@ -169,7 +168,7 @@ class frontendController extends Controller
                 "nama_barang"=>$barang->nama_barang
             ];
             transaction::create($data);
-            return redirect()->to("/");
+            return redirect()->back()->with('modal','show');
         }
         else{
             $check2 = transaction::where("id_barang",$id)->where("status",0)->get();
@@ -182,10 +181,10 @@ class frontendController extends Controller
                     "nama_barang"=>$barang->nama_barang
                 ];
                 transaction::create($data);
-                return redirect()->to("/");
+                return redirect()->back()->with('modal','show');
             }
             else{
-                return redirect()->to("/"); 
+                return redirect()->back()->with('modal','show');
             }
         }
     }
@@ -199,6 +198,7 @@ class frontendController extends Controller
      */
     public function update(Request $request, $id)
     {
+  
         if($request->has("update")){
             $data=[
                 "status"=>1
@@ -208,7 +208,8 @@ class frontendController extends Controller
         }
         else{
         transaction::where("id_transaksi",$id)->where("id_barang",$request->id)->delete();
-        return redirect()->to("/"); 
+        return redirect()->to($request->link)->with('modal','show'); 
+       
         }
     }
 

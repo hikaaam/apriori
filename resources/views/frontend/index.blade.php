@@ -1,35 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Daftar Product</h1>
+@extends('layouts.frontend')
+@section('content')
+<div class="row">
     @foreach ($data as $item)
-        <a href="{{ url('product', [$item->id]) }}"> {{$item->nama_barang}} </a>
-        <br>
+    <div class="col-sm-3">
+        <a href="{{ url('product', [$item->id]) }}">
+            <div class="card" style="width: 20rem; margin-bottom: 20px;">
+                <img class="card-img-top" src="{{$item->img}}" style="width: 20rem;height:16rem;" alt="Card image cap">
+                <div class="card-body">
+                    <p id="text" class="card-text"> {{$item->nama_barang}}.</p>
+                </div>
+            </div>
+        </a>
+    </div>
     @endforeach
-    <br>
-    <h1>Cart</h1>
-    @foreach ($cart as $item)
-       
-        <form action="{{ url('product', [$item->id_transaksi]) }}" method="post">
-            @csrf
-            @method("PUT")
-            <a href="{{ url('product', [$item->id_barang]) }}"> {{$item->nama_barang}} </a>
-            <input type="hidden" name="id" value="{{$item->id_barang}}">
-            <input style="color:red;font-weight: bold;background-color: white;margin-left: 10px" type="submit" value="X">
-        </form>
-        <br>
-    @endforeach
-    <form action="{{ url('product', [$item->id_transaksi]) }}" method="post">
-        @csrf
-        @method("PUT")
-        <input type="hidden" name="update" value="{{$item->id_barang}}">
-        <input type="submit" value="Beli Barang">
-    </form>
-</body>
-</html>
+</div>
+<br>
+
+@endsection
