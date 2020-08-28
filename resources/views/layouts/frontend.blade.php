@@ -16,6 +16,8 @@ p.harga as harga, p.img as img FROM transactions as t INNER JOIN products as p O
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bitter">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Josefin+Sans">
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/frontend.css') }}" rel="stylesheet">
@@ -257,7 +259,7 @@ p.harga as harga, p.img as img FROM transactions as t INNER JOIN products as p O
                     <a class="nav-link disabled" href="#">Disabled</a>
                 </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
+            <div class="form-inline my-2 my-lg-0">
                 <button type="button" style="margin-right: 1em;" class="btn btn-success" data-toggle="modal"
                     data-target="#cartModal">
                     <i style="font-size:20px;" class="fa fa-shopping-cart"></i>
@@ -340,9 +342,13 @@ p.harga as harga, p.img as img FROM transactions as t INNER JOIN products as p O
                             <div class="modal-footer border-top-0 d-flex justify-content-between">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <form action="{{ url('product', [$item->id_transaksi]) }}" method="post">
+                                    @csrf
+                                    @method("PUT")
+                                    <input type="hidden" name="update" value="update">
                                     <input class="btn btn-success"
                                         type="@if(count($cart)==0){{'hidden'}}@else{{'submit'}}@endif"
                                         value="Beli Barang">
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -350,7 +356,7 @@ p.harga as harga, p.img as img FROM transactions as t INNER JOIN products as p O
 
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
+            </div>
         </div>
     </nav>
     <div style="    padding-right: 1em;

@@ -15,7 +15,7 @@ class frontendController extends Controller
      */
     public function index()
     {
-        $data = product::all();
+        $data = product::paginate(12);
         return view("frontend.index",compact('data'));
     }
 
@@ -198,13 +198,12 @@ class frontendController extends Controller
      */
     public function update(Request $request, $id)
     {
-  
         if($request->has("update")){
             $data=[
                 "status"=>1
             ];
             transaction::where("id_transaksi",$id)->update($data);
-            return redirect()->to("/"); 
+            return redirect()->to("/")->with('modal','show'); 
         }
         else{
         transaction::where("id_transaksi",$id)->where("id_barang",$request->id)->delete();

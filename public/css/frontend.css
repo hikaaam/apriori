@@ -2,3 +2,45 @@
     position: fixed;
     top: 0;
 } */
+.img-show{
+  width: 100%;
+  border: 2px solid black;
+  padding: 1em;
+  margin-bottom: 2%;
+  background-color: #f2f2f2;
+}
+#show-product h1{
+    text-align: right;
+    font-family: 'Josefin Sans';
+   
+}
+.show-ket{
+    margin-bottom: 15%;
+}
+.show-ket .d-flex p, button{
+    font-family: 'Josefin Sans';
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.show-apriori{
+    margin-left: 10%;
+}
+.show-apriori p{
+    font-family: 'Josefin Sans';
+    font-size: 1.1em;
+    font-weight: '700';
+}
+.show-apriori h5{
+    font-family: 'Josefin Sans';
+    font-size: 1.5em;
+    font-weight: bold;
+}
+#show-apriori-item{
+    margin-bottom: 5%;
+}
+#show-apriori-item .card .card-body{
+    height: 9em;
+}
+.pagination{
+ font-family: 'Josefin Sans';
+}

@@ -1,28 +1,62 @@
 @extends('layouts.frontend')
 @section('content')
-
+<div>
     <h1>
-        <a style="color:navy" href="{{ url('', []) }}">{{"<== "}}Back</a>
+        <a style="color:navy" href="{{ url('', []) }}"><i class="fa fa-chevron-left"></i></a>
     </h1>
-    <h1>{{$product->nama_barang}}</h1>
-    <p>
-        harga : {{$product->harga}}
-    </p>
-    <button onclick="goTo('{{ url('product/'.$product->id.'/edit', []) }}')">
-        Tambahkan ke keranjang
-    </button>
-    <br>
-    <br>
-    Barang yang direkomendasikan oleh user lain :
-    @php
-    $i = 1;
-    @endphp
-    @foreach ($data as $item)
-    <a href="{{ url('product', [$item->id]) }}"> {{$item->nama_barang}} </a>
-    @if ($i<count($data)) ,
-    @endif 
-    @php $i++;
-    @endphp 
-    @endforeach 
-    @endsection
-    
+</div>
+<div class="row">
+    <div id="show-product" class="col-sm-8">
+        <div class="img-show">
+            <div class="d-flex justify-content-center">
+                <img class="img-fluid" src="{{$product->img}}" alt="">
+            </div>
+        </div>
+        <div class="show-ket">
+            <div class="d-flex justify-content-end">
+                <h1>
+                    {{ucfirst($product->nama_barang)}}
+                </h1>
+            </div>
+            <div class="d-flex justify-content-end">
+                <p>
+                    Rp. {{$product->harga}}
+                </p>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-info" onclick="goTo('{{ url('product/'.$product->id.'/edit', []) }}')">
+                    Tambahkan ke keranjang
+                    <i class="fa fa-shopping-cart"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="show-apriori">
+            <div class="row">
+                <p class="col-sm-12"><b>User yang beli ini juga membeli barang ini :</b></p>
+                @foreach ($data as $item)
+                <div id="show-apriori-item" class="col-sm-6">
+                    <div class="card">
+                        <a href="{{ url('product', [$item->id]) }}"><img class="img-fluid" src="{{$item->img}}"
+                                alt=""></a>
+                        <div class="card-body">
+                            <h5 class="card-title">{{$item->nama_barang}}</h5>
+                            <p class="card-text">Rp.{{$item->harga}} </p>
+                        </div>
+                    </div>       
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+@endsection
