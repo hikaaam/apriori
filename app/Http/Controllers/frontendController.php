@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\product;
 use App\transaction;
+use App\frontend;
 
 class frontendController extends Controller
 {
@@ -15,7 +16,9 @@ class frontendController extends Controller
      */
     public function index()
     {
-        $data = product::paginate(12);
+        $f = frontend::find(1);
+        $paginate = $f->pagination;
+        $data = product::paginate($paginate);
         return view("frontend.index",compact('data'));
     }
 

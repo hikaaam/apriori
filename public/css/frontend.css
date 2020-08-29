@@ -44,3 +44,9 @@
 .pagination{
  font-family: 'Josefin Sans';
 }
+#logo{
+    font-family: 'Josefin Sans';
+    font-size: 2em; 
+    font-weight: bold;
+    color:black;
+}

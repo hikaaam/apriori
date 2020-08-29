@@ -2,9 +2,11 @@
 <html lang="en">
 @php
 use Illuminate\Support\Facades\DB;
+use App\frontend;
 $cart = DB::select("SELECT t.nama_barang as nama_barang, t.id_barang as id_barang, t.id_transaksi as id_transaksi,
 p.harga as harga, p.img as img FROM transactions as t INNER JOIN products as p ON p.id = t.id_barang WHERE t.status =
 0");
+$view = frontend::find(1);
 @endphp
 
 <head>
@@ -229,7 +231,7 @@ p.harga as harga, p.img as img FROM transactions as t INNER JOIN products as p O
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Navbar</a>
+        <a id="logo" class="navbar-brand" href="{{ url('/', []) }}">{{$view->logo}}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -237,7 +239,7 @@ p.harga as harga, p.img as img FROM transactions as t INNER JOIN products as p O
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
+                {{-- <li class="nav-item active">
                     <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
@@ -257,7 +259,7 @@ p.harga as harga, p.img as img FROM transactions as t INNER JOIN products as p O
                 </li>
                 <li class="nav-item">
                     <a class="nav-link disabled" href="#">Disabled</a>
-                </li>
+                </li> --}}
             </ul>
             <div class="form-inline my-2 my-lg-0">
                 <button type="button" style="margin-right: 1em;" class="btn btn-success" data-toggle="modal"
@@ -370,16 +372,19 @@ p.harga as harga, p.img as img FROM transactions as t INNER JOIN products as p O
         <div class="container">
             <div class="row row-pb-md">
                 <div class="col-md-4 fh5co-widget">
-                    <h3>A Little About {{ config('app.name')}} </h3>
-                    <p class="footer_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent auctor
-                        neque vitae pretium commodo. Ut nec vestibulum lorem. </p>
-                    <p class="footer_text"><a class="btn btn-primary" href="#">Button</a></p>
+                    <h3>A Little About {{$view->logo}} </h3>
+                    <p class="footer_text">{{$view->tentang}}. </p>
+                    {{-- <p class="footer_text"><a class="btn btn-primary" href="#">Button</a></p> --}}
                 </div>
                 <div class="col-md-8">
-                    <h3>Classes</h3>
+                    <h3>Social Media</h3>
                     <div class="col-md-4 col-sm-4 col-xs-6">
                         <ul class="fh5co-footer-links">
-                            <li><a href="#">Link disini</a></li>
+                            <li>
+                                <a style="font-size: 1.8em;color:#eee;padding:5%" href="{{$view->github}}"><i class="fa fa-github"></i></a>
+                                <a style="font-size: 1.8em;color:#eee;padding:5%" href="{{$view->facebook}}"><i class="fa fa-facebook"></i></a>
+                                <a style="font-size: 1.8em;color:#eee;padding:5%" href="{{$view->instagram}}"><i class="fa fa-instagram"></i></a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -388,8 +393,8 @@ p.harga as harga, p.img as img FROM transactions as t INNER JOIN products as p O
             <div class="row copyright">
                 <div class="col-md-12 text-center">
                     <p>
-                        <small class="block">&copy; 2017 | All Rights Reserved.</small>
-                        <small class="block">Powered by : (_)(_)===D</small>
+                        <small class="block">&copy; 2020 | All Rights Reserved.</small>
+                        <small class="block">Copyright by : {{$view->copyright}} </small>
                     </p>
                 </div>
             </div>
