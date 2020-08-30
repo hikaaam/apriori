@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\transaction;
 use App\product;
 use App\frontend;
+use App\categories;
 
 class backendController extends Controller
 {
@@ -72,6 +73,13 @@ class backendController extends Controller
         if($id == "home"){
             $data = frontend::find(1);
             return view('backend.showHome',compact('data'));
+        }
+        else if($id = "product"){
+            $data = product::all();
+            return view("backend.product.index",compact('data'));
+        }
+        else if($id = "categories"){
+
         }
         else{
             $data = frontend::find(1);

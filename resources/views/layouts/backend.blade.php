@@ -6,6 +6,12 @@
 @php($msg = "null" )
 @endif
 
+@if(session()->has('error'))
+@php($error = session()->get('error'))
+@else 
+@php($error = "null")
+@endif
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -123,13 +129,13 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url('mahasiswa', []) }}" class="nav-link">
+                                    <a href="{{ url('admin/product/create', []) }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Tambah Data</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ url('mahasiswa/create', []) }}" class="nav-link">
+                                    <a href="{{ url('admin/product', []) }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Edit data</p>
                                     </a>
@@ -276,10 +282,14 @@
     });
    
     var msg = '{{$msg}}';
+    var error = '{{$error}}';
     window.onload = (event) => {
         console.log(msg)
         if(msg !=="null"){
             swal("Success!!", msg, "success");  
+        }
+        if(error !=="null"){
+            swal("Error", error, "warning");  
         }
     };
 
