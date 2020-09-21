@@ -8,7 +8,7 @@
 
 @if(session()->has('error'))
 @php($error = session()->get('error'))
-@else 
+@else
 @php($error = "null")
 @endif
 
@@ -152,20 +152,42 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url('absensi', []) }}" class="nav-link">
+                                    <a href="{{ url('admin/categories/create', []) }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Tambah Data</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ url('absen', []) }}" class="nav-link">
+                                    <a href="{{ url('admin/categories', []) }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Edit Data</p>
                                     </a>
                                 </li>
                             </ul>
                         </li>
-
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-edit"></i>
+                                <p>
+                                    Transaction
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ url('admin/transaction/create', []) }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Tambah Data</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ url('admin/transaction', []) }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Edit data</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                         <li class="nav-item">
                             <a href="pages/widgets.html" class="nav-link">
                                 <i class="nav-icon fas fa-power-off"></i>

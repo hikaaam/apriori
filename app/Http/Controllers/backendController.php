@@ -15,12 +15,20 @@ class backendController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
-      $jumlah_product = product::all()->count();
-      $jumlah_transaksi = transaction::where("status",1)->groupBy('id_transaksi')->count();
-      $barang_dibeli = transaction::where("status",1)->count();
-       return view("backend.index",compact('jumlah_product','jumlah_transaksi','barang_dibeli'));
+        $jumlah_product = product::all();
+        $jumlah_product = count($jumlah_product);
+        $jumlah_transaksi = transaction::where("status",1)->groupBy('id_transaksi')->get();
+        $jumlah_transaksi = \count($jumlah_transaksi);
+        $barang_dibeli = transaction::where("status",1)->get();
+        $barang_dibeli = count($barang_dibeli);
+        return view("backend.index",compact('jumlah_product','jumlah_transaksi','barang_dibeli'));
     }
 
     /**
@@ -74,12 +82,27 @@ class backendController extends Controller
             $data = frontend::find(1);
             return view('backend.showHome',compact('data'));
         }
-        else if($id = "product"){
+        else if($id == "product"){
             $data = product::all();
             return view("backend.product.index",compact('data'));
         }
-        else if($id = "categories"){
-
+        else if($id == "categories"){
+            $data = categories::all();
+            return view("backend.categories.index",compact('data'));
+        }
+        else if($id == "transaction"){
+            $harga = [];
+            $data = transaction::groupBy('id_transaksi')->orderBy('id','desc')->get();
+            foreach($data as $d){
+               $temp = transaction::where('id_transaksi',$d->id_transaksi)->get();
+               $count = 0;
+               foreach($temp as $t){
+                   $zz = product::find($t->id_barang);
+                   $count = $count+$zz->harga;
+               }
+               array_push($harga,$count);
+            }
+            return view("backend.transaction.index",compact('data','harga'));
         }
         else{
             $data = frontend::find(1);
