@@ -3,9 +3,17 @@
 @php
 use Illuminate\Support\Facades\DB;
 use App\frontend;
+use App\akun;
+if(Session::has('nama')){
+    $akun = akun::where('email',Session::get('email'))->get();
+    $user_id = $akun[0]['id'];
+}
+else{
+    $user_id=0;
+}
 $cart = DB::select("SELECT t.nama_barang as nama_barang, t.id_barang as id_barang, t.id_transaksi as id_transaksi,
 p.harga as harga, p.img as img FROM transactions as t INNER JOIN products as p ON p.id = t.id_barang WHERE t.status =
-0");
+0 AND t.id_user = $user_id");
 $view = frontend::find(1);
 @endphp
 
@@ -30,7 +38,19 @@ $view = frontend::find(1);
             overflow-x: hidden;
 
         }
+        label{
+            font-size: 1em;
+            font-weight: bold;
+        }
+        #btn-login{
+            width: 45%;
+            margin-right: 8%;
+        }
+        #btn-register{
+            width: 45%;
+            color: white;
 
+        }
         .container {
             padding: 2rem 0rem;
         }
@@ -343,7 +363,15 @@ $view = frontend::find(1);
                             </div>
                             <div class="modal-footer border-top-0 d-flex justify-content-between">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <form action="{{ url('product', [$item->id_transaksi]) }}" method="post">
+                                @php
+                                    if(Session::has('nama')){
+                                        $id_trans = $item->id_transaksi;
+                                    }
+                                    else{
+                                        $id_trans = 0;
+                                    }
+                                @endphp
+                                <form action="{{ url('product', [$id_trans]) }}" method="post">
                                     @csrf
                                     @method("PUT")
                                     <input type="hidden" name="update" value="update">
@@ -358,6 +386,11 @@ $view = frontend::find(1);
 
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                @if (Session::has('nama'))
+                    <a style="color:red" href="{{ url('akun/logout', []) }}"> <i style="font-size:20px;margin-left:10px;" class="fa fa-power-off"></i></a>
+                @else
+                <a style="color:green;" href="{{ url('akun', []) }}"><i style="font-size:20px;margin-left:10px;" class="fa fa-sign-in"></i></a>
+                @endif
             </div>
         </div>
     </nav>

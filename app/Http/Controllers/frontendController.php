@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\product;
 use App\transaction;
 use App\frontend;
+use App\akun;
+use Session;
 
 class frontendController extends Controller
 {
@@ -54,8 +56,8 @@ class frontendController extends Controller
         $product = product::find($id);
         
         $id_transaksi = transaction::select("id_transaksi")->where('id_barang',$id)->where('status',1)->get();
-
         $jumlah_antecedent = count($id_transaksi);
+        
         $seluruhTransaksi = transaction::groupBy("id_transaksi")->where('status',1)->get();
         $jumlah_transaksi = count($seluruhTransaksi);
 
@@ -155,28 +157,15 @@ class frontendController extends Controller
             randomId();
         }
       }
-
       //code here
-
-      $id_user = 1;
-      $barang = product::find($id);
-      $check = transaction::where("status",0)->get();
-       
-        if(count($check)<1){
-            $id_transaksi = randomId();
-            $data = [
-                "id_transaksi"=>$id_transaksi,
-                "id_barang"=>$id,
-                "id_user"=>$id_user,
-                "nama_barang"=>$barang->nama_barang
-            ];
-            transaction::create($data);
-            return redirect()->back()->with('modal','show');
-        }
-        else{
-            $check2 = transaction::where("id_barang",$id)->where("status",0)->get();
-            if(count($check2)<1){
-                $id_transaksi = $check[0]['id_transaksi'];
+      if(Session::has('nama')){
+        $akun = akun::where('email',Session::get('email'))->get();
+        $id_user = $akun[0]['id'];
+        $barang = product::find($id);
+        $check = transaction::where("status",0)->get();
+        
+            if(count($check)<1){
+                $id_transaksi = randomId();
                 $data = [
                     "id_transaksi"=>$id_transaksi,
                     "id_barang"=>$id,
@@ -187,8 +176,25 @@ class frontendController extends Controller
                 return redirect()->back()->with('modal','show');
             }
             else{
-                return redirect()->back()->with('modal','show');
+                $check2 = transaction::where("id_barang",$id)->where("status",0)->get();
+                if(count($check2)<1){
+                    $id_transaksi = $check[0]['id_transaksi'];
+                    $data = [
+                        "id_transaksi"=>$id_transaksi,
+                        "id_barang"=>$id,
+                        "id_user"=>$id_user,
+                        "nama_barang"=>$barang->nama_barang
+                    ];
+                    transaction::create($data);
+                    return redirect()->back()->with('modal','show');
+                }
+                else{
+                    return redirect()->back()->with('modal','show');
+                }
             }
+        }
+        else{
+            return view('frontend.akun.index');
         }
     }
 
@@ -202,8 +208,64 @@ class frontendController extends Controller
     public function update(Request $request, $id)
     {
         if($request->has("update")){
+            $data = transaction::where('id_transaksi',$id)->get();
+            $total = 0;
+            foreach($data as $d){
+                $harga = product::select('harga')->find($d->id_barang);
+                $total = $total + $harga['harga'];
+            }
+            return view('frontend.checkout',compact('id','total'));
+            // $data=[
+            //     "status"=>1
+            // ];
+            // transaction::where("id_transaksi",$id)->update($data);
+            // return redirect()->to("/")->with('modal','show'); 
+        }
+        if($request->has("img")){
+            if( !$request->has('img')){
+                $foto = $data->img;
+            }
+            else{        
+                $target_dir = base_path('public\images\transaksi\\');
+                $target_file = $target_dir . basename($_FILES["img"]["name"]);
+                $foto = "images\\transaksi\\".basename($_FILES["img"]["name"]);
+                $uploadOk = 1;
+                $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+        
+                // Check if image file is a actual image or fake image
+                if(isset($_POST["submit"])) {
+                $check = getimagesize($_FILES["img"]["tmp_name"]);
+                if($check !== false) {
+                    // echo "File is an image - " . $check["mime"] . ".";
+                    $uploadOk = 1;
+                } else {
+                    return redirect()->back()->with('error', "Format file harus berbentuk image");
+                    $uploadOk = 0;
+                }
+                }
+        
+                // Allow certain file formats
+                if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+                && $imageFileType != "gif" ) {
+                    return redirect()->back()->with('error', "File foto hanya boleh png, jpeg, jpg");
+                $uploadOk = 0;
+                }
+        
+                // Check if $uploadOk is set to 0 by an error
+                if ($uploadOk == 0) {
+                    return redirect()->back()->with('error', "Terjadi Error Saat Mengupload Foto");
+                // if everything is ok, try to upload file
+                } else {
+                if (move_uploaded_file($_FILES["img"]["tmp_name"], $target_file)) {
+                    echo "The file ". basename( $_FILES["img"]["name"]). " has been uploaded.";
+                } else {
+                    return redirect()->back()->with('error', "Terjadi Error Saat Mengupload Foto");
+                }
+                }
+        }
             $data=[
-                "status"=>1
+                "status"=>2,
+                "img"=>$foto
             ];
             transaction::where("id_transaksi",$id)->update($data);
             return redirect()->to("/")->with('modal','show'); 

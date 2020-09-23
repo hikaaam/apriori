@@ -19,9 +19,11 @@ Route::get('/', "frontendController@index");
 Route::resource("/product","frontendController");
 Route::resource("/admin","backendController");
 Route::resource("/admin/product","ProductController");
+Route::resource("/admin/transaction","transaksiController");
 Route::resource("/admin/categories","CategoriesController");
 Route::resource("/profile","ProfileController");
 Route::resource("/history","TransactionController");
+Route::resource("/akun","AkunController");
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
