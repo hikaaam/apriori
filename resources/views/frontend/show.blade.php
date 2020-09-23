@@ -9,7 +9,7 @@
     <div id="show-product" class="col-sm-8">
         <div class="img-show">
             <div class="d-flex justify-content-center">
-                <img class="img-fluid" src="{{$product->img}}" alt="">
+                <img class="img-fluid" src="{{ asset($product->img) }}" alt="">
             </div>
         </div>
         <div class="show-ket">

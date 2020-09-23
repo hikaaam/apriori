@@ -175,15 +175,27 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url('admin/transaction/create', []) }}" class="nav-link">
+                                    <a href="{{ url('admin/transaction', []) }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Tambah Data</p>
+                                        <p>Semua Transaksi</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ url('admin/transaction', []) }}" class="nav-link">
+                                    <a href="{{ url('admin/transaction/TB', []) }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Edit data</p>
+                                        <p>Transaksi Baru</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ url('admin/transaction/BD', []) }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Belum Diverifikasi</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ url('admin/transaction/SD', []) }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Sudah Diverifikasi</p>
                                     </a>
                                 </li>
                             </ul>

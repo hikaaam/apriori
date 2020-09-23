@@ -330,7 +330,7 @@ $view = frontend::find(1);
                                         <tr>
                                             <td class="w-25">
                                                 <a href="{{ url('product', [$item->id_barang]) }}">
-                                                    <img src="{{$item->img}}" class="img-fluid img-thumbnail"
+                                                    <img src="{{ asset($item->img) }}" class="img-fluid img-thumbnail"
                                                         alt="{{$item->nama_barang}}">
                                                 </a>
                                             </td>
