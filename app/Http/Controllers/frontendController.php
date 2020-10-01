@@ -8,6 +8,8 @@ use App\transaction;
 use App\frontend;
 use App\akun;
 use Session;
+use App\Mail\NotifMail;
+use Illuminate\Support\Facades\Mail;
 
 class frontendController extends Controller
 {
@@ -263,6 +265,17 @@ class frontendController extends Controller
                 }
                 }
         }
+        
+            $target = "supmarhernanda@gmail.com";
+            $data = ['data'=>$id];
+                try {
+                    //code...
+                    Mail::to($target)->Send(new NotifMail($data));
+                    // return $otp;
+                } 
+                catch (\Throwable $th) {
+                    return $th;
+                }
             $data=[
                 "status"=>2,
                 "img"=>$foto

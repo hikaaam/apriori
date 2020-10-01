@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\transaction;
 use App\product;
-use App\akun;
-use Session;
-use Illuminate\Http\Request;
 
-class TransactionController extends Controller
+class HistoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,17 +16,9 @@ class TransactionController extends Controller
     public function index()
     {
         $harga = [];
-        if(Session::has("nama")){
-            $id_user = akun::where('email',Session::get('email')[0])->get();
-            // return Session::get('email')[0];
-            $id_user = $id_user[0]['id'];
-        }
-        else{
-            $id_user = 0;
-        }
-        $data = transaction::where('id_user',$id_user)->groupBy('id_transaksi')->orderBy('id','desc')->paginate(4);
+        $data = transaction::where('status',0)->groupBy('id_transaksi')->orderBy('id','desc')->get();
         foreach($data as $d){
-           $temp = transaction::where('id_user',$id_user)->where('id_transaksi',$d->id_transaksi)->get();
+           $temp = transaction::where('id_transaksi',$d->id_transaksi)->where('status',0)->get();
            $count = 0;
            foreach($temp as $t){
                $zz = product::find($t->id_barang);
@@ -36,9 +26,7 @@ class TransactionController extends Controller
            }
            array_push($harga,$count);
         }
-    
         return view("frontend.history.index",compact('data','harga'));
-
     }
 
     /**
@@ -65,10 +53,10 @@ class TransactionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\transaction  $transaction
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(transaction $transaction)
+    public function show($id)
     {
         //
     }
@@ -76,10 +64,10 @@ class TransactionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\transaction  $transaction
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(transaction $transaction)
+    public function edit($id)
     {
         //
     }
@@ -88,10 +76,10 @@ class TransactionController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\transaction  $transaction
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, transaction $transaction)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -99,10 +87,10 @@ class TransactionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\transaction  $transaction
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(transaction $transaction)
+    public function destroy($id)
     {
         //
     }

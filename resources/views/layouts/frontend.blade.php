@@ -5,15 +5,17 @@ use Illuminate\Support\Facades\DB;
 use App\frontend;
 use App\akun;
 if(Session::has('nama')){
-    $akun = akun::where('email',Session::get('email'))->get();
-    $user_id = $akun[0]['id'];
+$akun = akun::where('email',Session::get('email'))->get();
+$user_id = $akun[0]['id'];
 }
 else{
-    $user_id=0;
+$user_id=0;
 }
 $cart = DB::select("SELECT t.nama_barang as nama_barang, t.id_barang as id_barang, t.id_transaksi as id_transaksi,
 p.harga as harga, p.img as img FROM transactions as t INNER JOIN products as p ON p.id = t.id_barang WHERE t.status =
 0 AND t.id_user = $user_id");
+
+
 $view = frontend::find(1);
 @endphp
 
@@ -31,26 +33,37 @@ $view = frontend::find(1);
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/frontend.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css', []) }}">
+    <link rel="stylesheet" href="{{ url('plugins/datatables-responsive/css/responsive.bootstrap4.min.css', []) }}">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.js"
         integrity="sha256-DrT5NfxfbHvMHux31Lkhxg42LY6of8TaYyK50jnxRnM=" crossorigin="anonymous"></script>
+    <script src="{{ url('plugins/jquery/jquery.min.js', []) }}"></script>
+    <script src="{{ url('plugins/datatables/jquery.dataTables.min.js', []) }}"></script>
+    <script src="{{ url('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js', []) }}"></script>
+    <script src="{{ url('plugins/datatables-responsive/js/dataTables.responsive.min.js', []) }}"></script>
+    <script src="{{ url('plugins/datatables-responsive/js/responsive.bootstrap4.min.js', []) }}"></script>
     <style>
         body {
             overflow-x: hidden;
 
         }
-        label{
+
+        label {
             font-size: 1em;
             font-weight: bold;
         }
-        #btn-login{
+
+        #btn-login {
             width: 45%;
             margin-right: 8%;
         }
-        #btn-register{
+
+        #btn-register {
             width: 45%;
             color: white;
 
         }
+
         .container {
             padding: 2rem 0rem;
         }
@@ -282,6 +295,12 @@ $view = frontend::find(1);
                 </li> --}}
             </ul>
             <div class="form-inline my-2 my-lg-0">
+                @php
+                $linkhistory = url('history', []);
+                @endphp
+
+                <button type="button" style="margin-right: 1em;" onclick="goTo('{{$linkhistory}}')"
+                    class="btn btn-warning">History</button>
                 <button type="button" style="margin-right: 1em;" class="btn btn-success" data-toggle="modal"
                     data-target="#cartModal">
                     <i style="font-size:20px;" class="fa fa-shopping-cart"></i>
@@ -316,17 +335,16 @@ $view = frontend::find(1);
                                         $i =0;
                                         @endphp
                                         @foreach ($cart as $item)
-                                        @if ($i==0)             
-                                               <form action="{{ url('product', [$item->id_transaksi]) }}"
-                                                method="post">
-                                                @csrf
-                                                @method("PUT")
-                                                <input type="hidden" name="id" value="{{$item->id_barang}}">
-                                                <input type="hidden" name="link" value="{{$_SERVER['REQUEST_URI']}}">
-                                                <input class="btn btn-danger" type="hidden" value="delete">
-                                            </form>
+                                        @if ($i==0)
+                                        <form action="{{ url('product', [$item->id_transaksi]) }}" method="post">
+                                            @csrf
+                                            @method("PUT")
+                                            <input type="hidden" name="id" value="{{$item->id_barang}}">
+                                            <input type="hidden" name="link" value="{{$_SERVER['REQUEST_URI']}}">
+                                            <input class="btn btn-danger" type="hidden" value="delete">
+                                        </form>
                                         @endif
-                                    
+
                                         <tr>
                                             <td class="w-25">
                                                 <a href="{{ url('product', [$item->id_barang]) }}">
@@ -345,13 +363,14 @@ $view = frontend::find(1);
                                                     @csrf
                                                     @method("PUT")
                                                     <input type="hidden" name="id" value="{{$item->id_barang}}">
-                                                    <input type="hidden" name="link" value="{{$_SERVER['REQUEST_URI']}}">
+                                                    <input type="hidden" name="link"
+                                                        value="{{$_SERVER['REQUEST_URI']}}">
                                                     <input class="btn btn-danger" type="submit" value="delete">
                                                 </form>
                                             </td>
                                         </tr>
                                         @php
-                                            $i++;
+                                        $i++;
                                         @endphp
                                         <br>
                                         @endforeach
@@ -364,12 +383,17 @@ $view = frontend::find(1);
                             <div class="modal-footer border-top-0 d-flex justify-content-between">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 @php
-                                    if(Session::has('nama')){
-                                        $id_trans = $item->id_transaksi;
-                                    }
-                                    else{
-                                        $id_trans = 0;
-                                    }
+                                if(Session::has('nama')){
+                                if(count($cart)>0){
+                                $id_trans = $item->id_transaksi;
+                                }
+                                else{
+                                $id_trans = 0;
+                                }
+                                }
+                                else{
+                                $id_trans = 0;
+                                }
                                 @endphp
                                 <form action="{{ url('product', [$id_trans]) }}" method="post">
                                     @csrf
@@ -387,9 +411,11 @@ $view = frontend::find(1);
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                 @if (Session::has('nama'))
-                    <a style="color:red" href="{{ url('akun/logout', []) }}"> <i style="font-size:20px;margin-left:10px;" class="fa fa-power-off"></i></a>
+                <a style="color:red" href="{{ url('akun/logout', []) }}"> <i style="font-size:20px;margin-left:10px;"
+                        class="fa fa-power-off"></i></a>
                 @else
-                <a style="color:green;" href="{{ url('akun', []) }}"><i style="font-size:20px;margin-left:10px;" class="fa fa-sign-in"></i></a>
+                <a style="color:green;" href="{{ url('akun', []) }}"><i style="font-size:20px;margin-left:10px;"
+                        class="fa fa-sign-in"></i></a>
                 @endif
             </div>
         </div>
@@ -414,9 +440,12 @@ $view = frontend::find(1);
                     <div class="col-md-4 col-sm-4 col-xs-6">
                         <ul class="fh5co-footer-links">
                             <li>
-                                <a style="font-size: 1.8em;color:#eee;padding:5%" href="{{$view->github}}"><i class="fa fa-github"></i></a>
-                                <a style="font-size: 1.8em;color:#eee;padding:5%" href="{{$view->facebook}}"><i class="fa fa-facebook"></i></a>
-                                <a style="font-size: 1.8em;color:#eee;padding:5%" href="{{$view->instagram}}"><i class="fa fa-instagram"></i></a>
+                                <a style="font-size: 1.8em;color:#eee;padding:5%" href="{{$view->github}}"><i
+                                        class="fa fa-github"></i></a>
+                                <a style="font-size: 1.8em;color:#eee;padding:5%" href="{{$view->facebook}}"><i
+                                        class="fa fa-facebook"></i></a>
+                                <a style="font-size: 1.8em;color:#eee;padding:5%" href="{{$view->instagram}}"><i
+                                        class="fa fa-instagram"></i></a>
                             </li>
                         </ul>
                     </div>
@@ -437,6 +466,21 @@ $view = frontend::find(1);
 
     @if(session()->has('modal'))
     <script>
+        $(function () {
+            $("#example1").DataTable({
+                "responsive": true,
+                "autoWidth": false,
+            });
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
         $(document).ready(function() {  
         $('#cartModal').modal('show');
         });

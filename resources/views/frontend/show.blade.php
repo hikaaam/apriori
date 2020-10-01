@@ -38,13 +38,18 @@
                 @foreach ($data as $item)
                 <div id="show-apriori-item" class="col-sm-6">
                     <div class="card">
-                        <a href="{{ url('product', [$item->id]) }}"><img class="img-fluid" src="{{$item->img}}"
-                                alt=""></a>
+                        <a href="{{ url('product', [$item->id]) }}">
+                            <div class="d-flex justify-content-center">
+                                <img style="height:8em" class="img-fluid" src="{{ asset($item->img) }}" alt="">
+                            </div>
+                        </a>
+
+
                         <div class="card-body">
                             <h5 class="card-title">{{$item->nama_barang}}</h5>
                             <p class="card-text">Rp.{{$item->harga}} </p>
                         </div>
-                    </div>       
+                    </div>
                 </div>
                 @endforeach
             </div>

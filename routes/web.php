@@ -23,6 +23,7 @@ Route::resource("/admin/transaction","transaksiController");
 Route::resource("/admin/categories","CategoriesController");
 Route::resource("/profile","ProfileController");
 Route::resource("/history","TransactionController");
+Route::resource("/carthistory","HistoryController");
 Route::resource("/akun","AkunController");
 Auth::routes();
 

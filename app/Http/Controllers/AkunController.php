@@ -44,6 +44,8 @@ class AkunController extends Controller
                 "email"=>$request->email,
                 "password"=>md5($request->password)
             ];
+            // Session::push("data",$data);
+            // return view("frontend.akun.konfirmasi"); auth
             $check = akun::where('email',$request->email)->get();
             if(\count($check)>0){
                 return back()->WithErrors("Akun sudah terdaftar");
