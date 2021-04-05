@@ -55,7 +55,7 @@ class AkunController extends Controller
                 Session::push('nama',$request->nama);
                 Session::push('alamat',$request->alamat);
                 Session::push('email',$request->email);
-                return redirect('');
+                return redirect('/');
             }
         }   
         else{
@@ -66,7 +66,7 @@ class AkunController extends Controller
                 Session::push('nama',$data[0]['nama']);
                 Session::push('alamat',$data[0]['nama']);
                 Session::push('email',$request->email);
-                return redirect('');
+                return redirect('/');
             }
             else{
                 return back()->WithErrors("Password anda salah");

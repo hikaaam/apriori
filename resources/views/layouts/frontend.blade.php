@@ -407,9 +407,13 @@ $view = frontend::find(1);
                         </div>
                     </div>
                 </div>
+                <form action="{{ url('search') }}" method="post">
+                    @csrf
+                    <input class="form-control mr-sm-2" type="search" name="search" placeholder="Search"
+                        aria-label="Search">
 
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    <input class="btn btn-outline-success my-2 my-sm-0" type="submit" value="Search">
+                </form>
                 @if (Session::has('nama'))
                 <a style="color:red" href="{{ url('akun/logout', []) }}"> <i style="font-size:20px;margin-left:10px;"
                         class="fa fa-power-off"></i></a>

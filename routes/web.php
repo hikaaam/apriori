@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', "frontendController@index");
+Route::post('/search', "frontendController@search");
 
 //Resource
 Route::resource("/product","frontendController");

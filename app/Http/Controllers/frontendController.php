@@ -10,7 +10,7 @@ use App\akun;
 use Session;
 use App\Mail\NotifMail;
 use Illuminate\Support\Facades\Mail;
-
+use DB;
 class frontendController extends Controller
 {
     /**
@@ -80,7 +80,6 @@ class frontendController extends Controller
       
         
         foreach($dataRaw as $dr){  
-      
             foreach($dr as $subdr){
             array_push($arrayCount,$subdr);  
             }
@@ -130,7 +129,28 @@ class frontendController extends Controller
           }
           $i++;
         }
+        if (count($data) <=0) {
+            //kie wik default ketika pertama ngisi
+            $katz = $product->id_kategori;
+            $sqlQuery = "SELECT transactions.*, count(transactions.id_barang) as 'most_buy' FROM `transactions` INNER JOIN".
+            " products ON products.id = transactions.id_barang INNER JOIN categories ON products.id_kategori = categories.id".
+            " WHERE categories.id = ".$katz." GROUP BY transactions.id_barang ORDER BY most_buy desc limit 1"; 
+            //mencari product terlaris dengan kategori yg sama kemudian cari nilai apriori nya;
+            $getProduct = DB::select($sqlQuery);
+            // dd($getProduct); //uncomment ini untuk lihat product yg terlaris (most_buy)
+            $mostbuyid = $getProduct[0]->id_barang;
+            // dd(apriori($mostbuyid));
+            $data = apriori($mostbuyid); //cari lagi id product dengan apriori
+        }
        return view("frontend.show",compact("product","data"));
+    }
+    public function search(Request $request){
+        $id = $request->search;
+        $f = frontend::find(1);
+        $paginate = $f->pagination;
+        $data = product::where('nama_barang','like',"%".$id."%")->paginate($paginate);
+        $message = "Search Result of ".$id;
+        return view("frontend.index",compact('data','message'));
     }
 
     /**
@@ -286,7 +306,7 @@ class frontendController extends Controller
         else{
         transaction::where("id_transaksi",$id)->where("id_barang",$request->id)->delete();
         return redirect()->to($request->link)->with('modal','show'); 
-       
+            
         }
     }
 
@@ -300,4 +320,80 @@ class frontendController extends Controller
     {
         //
     }
+}
+function apriori($id){
+    $product = product::find($id);
+    $id_transaksi = transaction::select("id_transaksi")->where('id_barang',$id)->where('status',1)->get();
+    $jumlah_antecedent = count($id_transaksi);
+    // dd($product);
+    $seluruhTransaksi = transaction::groupBy("id_transaksi")->where('status',1)->get();
+    $jumlah_transaksi = count($seluruhTransaksi);
+
+    $dataRaw = [];
+    foreach($id_transaksi as $idt){
+        $barang = transaction::where('id_transaksi',$idt->id_transaksi)->get();
+        $listBarang = [];
+        foreach($barang as $b){
+            $current_id = $b->id_transaksi;
+            if($b->id_barang != $id){
+            array_push($listBarang,$b->id_barang);
+            }
+        }
+        array_push($dataRaw,$listBarang);
+    }
+    // return $dataRaw;
+    $arrayCount = [];
+  
+    
+    foreach($dataRaw as $dr){  
+        foreach($dr as $subdr){
+        array_push($arrayCount,$subdr);  
+        }
+    }
+  
+    // return $arrayCount;
+
+    $jumlah = array_count_values($arrayCount);
+
+    $hasil = [];
+
+    foreach($jumlah as $key => $value){
+        $confidence = ($value/$jumlah_antecedent);
+        $support = ($value/$jumlah_transaksi);
+        // return $support*$confidence;
+        $isi = [
+            "value"=>$confidence*$support,
+            "key"=>$key
+        ];
+        array_push($hasil,$isi);
+    }
+
+    usort($hasil, function($a,$b){
+      return  $a["value"] < $b["value"];
+    });
+
+    // return $hasil;
+    $data = [];
+    $i = 0;
+    foreach($hasil as $key => $value){
+   
+       if($i == 0){
+        $product1 = product::find($value['key']);
+        array_push($data,$product1);
+       }
+       else if($i == 1){
+        $product2 = product::find($value['key']);
+        array_push($data,$product2);
+       }
+       else if($i == 2){
+       $product3 = product::find($value['key']);
+       array_push($data,$product3);
+       }
+      else if($i == 3 ){
+       $product4 = product::find($value['key']);
+       array_push($data,$product4);
+      }
+      $i++;
+    }
+    return $data;
 }
