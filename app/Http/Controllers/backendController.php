@@ -77,8 +77,9 @@ class backendController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($admin)
     {
+        $id = $admin;
         if ($id == "home") {
             $data = frontend::find(1);
             return view('backend.showHome', compact('data'));

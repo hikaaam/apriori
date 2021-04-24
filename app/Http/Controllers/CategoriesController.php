@@ -24,7 +24,7 @@ class CategoriesController extends Controller
      */
     public function create()
     {
-     
+
         return view("backend.categories.store");
     }
 
@@ -37,7 +37,7 @@ class CategoriesController extends Controller
     public function store(Request $request)
     {
         $data = [
-            "nama_kategori"=>$request->nama_kategori
+            "nama_kategori" => $request->nama_kategori
         ];
         categories::create($data);
         return redirect()->back()->with('success', "Kategori Berhasil Ditambahkan!!");
@@ -60,10 +60,11 @@ class CategoriesController extends Controller
      * @param  \App\categories  $categories
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($category)
     {
+        $id = $category;
         $data = categories::find($id);
-        return view("backend.categories.edit",compact('data'));
+        return view("backend.categories.edit", compact('data'));
     }
 
     /**
@@ -73,10 +74,11 @@ class CategoriesController extends Controller
      * @param  \App\categories  $categories
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $category)
     {
+        $id = $category;
         $data = [
-            "nama_kategori"=>$request->nama_kategori
+            "nama_kategori" => $request->nama_kategori
         ];
         categories::find($id)->update($data);
         return redirect()->back()->with('success', "Kategori Berhasil Diupdate!!");
@@ -88,8 +90,9 @@ class CategoriesController extends Controller
      * @param  \App\categories  $categories
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($category)
     {
+        $id = $category;
         categories::find($id)->delete();
         return redirect()->back()->with('success', "Kategori Berhasil Dihapus!");
     }

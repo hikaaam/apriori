@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\akun;
 use App\product;
-use Session;
+// use Session;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class AkunController extends Controller
 {
@@ -37,38 +38,35 @@ class AkunController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->has('nama')){
+        if ($request->has('nama')) {
             $data = [
-                "nama"=>$request->nama,
-                "alamat"=>$request->alamat,
-                "email"=>$request->email,
-                "password"=>md5($request->password)
+                "nama" => $request->nama,
+                "alamat" => $request->alamat,
+                "email" => $request->email,
+                "password" => md5($request->password)
             ];
             // Session::push("data",$data);
             // return view("frontend.akun.konfirmasi"); auth
-            $check = akun::where('email',$request->email)->get();
-            if(\count($check)>0){
+            $check = akun::where('email', $request->email)->get();
+            if (\count($check) > 0) {
                 return back()->WithErrors("Akun sudah terdaftar");
-            }
-            else{
+            } else {
                 akun::create($data);
-                Session::push('nama',$request->nama);
-                Session::push('alamat',$request->alamat);
-                Session::push('email',$request->email);
+                Session::push('nama', $request->nama);
+                Session::push('alamat', $request->alamat);
+                Session::push('email', $request->email);
                 return redirect('/');
             }
-        }   
-        else{
+        } else {
             $email = $request->email;
             $password = md5($request->password);
-            $data = akun::where('email',$email)->where('password',$password)->get();
-            if(count($data)>0){
-                Session::push('nama',$data[0]['nama']);
-                Session::push('alamat',$data[0]['nama']);
-                Session::push('email',$request->email);
+            $data = akun::where('email', $email)->where('password', $password)->get();
+            if (count($data) > 0) {
+                Session::push('nama', $data[0]['nama']);
+                Session::push('alamat', $data[0]['nama']);
+                Session::push('email', $request->email);
                 return redirect('/');
-            }
-            else{
+            } else {
                 return back()->WithErrors("Password anda salah");
             }
         }
@@ -80,18 +78,17 @@ class AkunController extends Controller
      * @param  \App\akun  $akun
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($akun)
     {
-        if($id == "register"){
+        $id = $akun;
+        if ($id == "register") {
             return view('frontend.akun.register');
-        }
-        else if($id == "logout"){
+        } else if ($id == "logout") {
             Session::forget('nama');
             Session::forget('alamat');
             Session::forget('email');
             return redirect('');
-        }
-        else{
+        } else {
             return abort(404);
         }
     }

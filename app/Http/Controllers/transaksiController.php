@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\transaction;
 use App\product;
+
 class transaksiController extends Controller
 {
     /**
@@ -44,49 +45,48 @@ class transaksiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($transaction)
     {
-        if($id == "TB"){
+        $id = $transaction;
+        if ($id == "TB") {
             $harga = [];
-            $data = transaction::where('status',0)->groupBy('id_transaksi')->orderBy('id','desc')->get();
-            foreach($data as $d){
-               $temp = transaction::where('id_transaksi',$d->id_transaksi)->where('status',0)->get();
-               $count = 0;
-               foreach($temp as $t){
-                   $zz = product::find($t->id_barang);
-                   $count = $count+$zz->harga;
-               }
-               array_push($harga,$count);
+            $data = transaction::where('status', 0)->groupBy('id_transaksi')->orderBy('id', 'desc')->get();
+            foreach ($data as $d) {
+                $temp = transaction::where('id_transaksi', $d->id_transaksi)->where('status', 0)->get();
+                $count = 0;
+                foreach ($temp as $t) {
+                    $zz = product::find($t->id_barang);
+                    $count = $count + $zz->harga;
+                }
+                array_push($harga, $count);
             }
-            return view("backend.transaction.index",compact('data','harga'));
-        }
-        else if($id == "BD"){
+            return view("backend.transaction.index", compact('data', 'harga'));
+        } else if ($id == "BD") {
             $harga = [];
-            $data = transaction::where('status',2)->groupBy('id_transaksi')->orderBy('id','desc')->get();
-            foreach($data as $d){
-               $temp = transaction::where('id_transaksi',$d->id_transaksi)->where('status',2)->get();
-               $count = 0;
-               foreach($temp as $t){
-                   $zz = product::find($t->id_barang);
-                   $count = $count+$zz->harga;
-               }
-               array_push($harga,$count);
+            $data = transaction::where('status', 2)->groupBy('id_transaksi')->orderBy('id', 'desc')->get();
+            foreach ($data as $d) {
+                $temp = transaction::where('id_transaksi', $d->id_transaksi)->where('status', 2)->get();
+                $count = 0;
+                foreach ($temp as $t) {
+                    $zz = product::find($t->id_barang);
+                    $count = $count + $zz->harga;
+                }
+                array_push($harga, $count);
             }
-            return view("backend.transaction.index",compact('data','harga'));
-        }
-        else{
+            return view("backend.transaction.index", compact('data', 'harga'));
+        } else {
             $harga = [];
-            $data = transaction::where('status',1)->groupBy('id_transaksi')->orderBy('id','desc')->get();
-            foreach($data as $d){
-               $temp = transaction::where('id_transaksi',$d->id_transaksi)->where('status',1)->get();
-               $count = 0;
-               foreach($temp as $t){
-                   $zz = product::find($t->id_barang);
-                   $count = $count+$zz->harga;
-               }
-               array_push($harga,$count);
+            $data = transaction::where('status', 1)->groupBy('id_transaksi')->orderBy('id', 'desc')->get();
+            foreach ($data as $d) {
+                $temp = transaction::where('id_transaksi', $d->id_transaksi)->where('status', 1)->get();
+                $count = 0;
+                foreach ($temp as $t) {
+                    $zz = product::find($t->id_barang);
+                    $count = $count + $zz->harga;
+                }
+                array_push($harga, $count);
             }
-            return view("backend.transaction.index",compact('data','harga'));
+            return view("backend.transaction.index", compact('data', 'harga'));
         }
     }
 
@@ -96,11 +96,12 @@ class transaksiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($transaction)
     {
-        $item = transaction::where('id_transaksi',$id)->limit(1)->get();
+        $id = $transaction;
+        $item = transaction::where('id_transaksi', $id)->limit(1)->get();
         $item = $item[0];
-        return view("backend.transaction.edit",compact('item'));
+        return view("backend.transaction.edit", compact('item'));
     }
 
     /**
@@ -110,12 +111,13 @@ class transaksiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $transaction)
     {
+        $id = $transaction;
         $data = [
-            "status"=>$request->status
+            "status" => $request->status
         ];
-        transaction::where('id_transaksi',$id)->update($data);
+        transaction::where('id_transaksi', $id)->update($data);
         return redirect()->back()->with('success', "Transaksi Berhasil Diupdate!");
     }
 
@@ -125,9 +127,10 @@ class transaksiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($transaction)
     {
-        transaction::where('id_transaksi',$id)->delete();
+        $id = $transaction;
+        transaction::where('id_transaksi', $id)->delete();
         return redirect()->back()->with('success', "Transaksi Berhasil Dihapus!");
     }
 }

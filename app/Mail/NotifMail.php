@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class NotifMail extends Mailable
 {
-    Public $data;
+    public $data;
     use Queueable, SerializesModels;
 
     /**
@@ -29,6 +29,6 @@ class NotifMail extends Mailable
      */
     public function build()
     {
-        return $this->from('hidroponikapps@gmail.com','Dwiki Shop')->subject('Order Baru ['.$this->data['data'].']')->markdown('Emails.notifmail')->with('data',$this->data);
+        return $this->from('hidroponikapps@gmail.com', 'Dwiki Shop')->subject('Order Baru [' . $this->data['data'] . ']')->markdown('emails.notifmail')->with('data', $this->data);
     }
 }
