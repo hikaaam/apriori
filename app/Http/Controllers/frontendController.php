@@ -267,7 +267,7 @@ class frontendController extends Controller
                 $target_dir = base_path('public/images/transaksi/');
                 $uploadOk = 1;
                 $ext = strtolower(pathinfo(basename($_FILES["img"]["name"]), PATHINFO_EXTENSION));
-                $imagename = Carbon::now()->unix() . basename($_FILES["img"]["name"]) . $ext;
+                $imagename = Carbon::now()->unix() . basename($_FILES["img"]["name"]);
                 $target_file = $target_dir . $imagename;
                 $imageFileType = $ext;
                 $foto = "images\\transaksi\\" . $imagename;
