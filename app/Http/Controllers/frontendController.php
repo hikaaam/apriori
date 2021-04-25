@@ -60,12 +60,18 @@ class frontendController extends Controller
         $id = $product;
         $historyExist = false;
         // try {
-        $product = product::findOrFail($id);
+        $product = product::findOrFail($id); //mengambil detail data yang diklik atau barang A
         $id_transaksi = transaction::select("id_transaksi")->where('id_barang', $id)->where('status', 1)->get();
-        $jumlah_antecedent = count($id_transaksi);
+        //kemudian cari semua transaksi yang mengandung barang A
+        $jumlah_antecedent = count($id_transaksi); //jumlah antecendent A || jumlah transaksi mengandung A
 
         $seluruhTransaksi = transaction::groupBy("id_transaksi")->where('status', 1)->get();
-        $jumlah_transaksi = count($seluruhTransaksi);
+        //ambil total transaksi dari database
+        $jumlah_transaksi = count($seluruhTransaksi); //jumlah total transaksi
+
+        // dd($jumlah_transaksi); //total seluruh transaksi
+        // dd($jumlah_antecedent); //total ancedent A
+        // dd($id_transaksi); //atencedent A
 
         $dataRaw = [];
         foreach ($id_transaksi as $idt) {
@@ -78,8 +84,10 @@ class frontendController extends Controller
                 }
             }
             array_push($dataRaw, $listBarang);
-        }
-        // return $dataRaw;
+        } //72-83 ambil barang yang berhubungan dengan A dari antecedent A (seluruh transasksi yg mengandung A)
+
+        // dd($dataRaw); //check AUB
+
         $arrayCount = [];
 
 
@@ -87,11 +95,13 @@ class frontendController extends Controller
             foreach ($dr as $subdr) {
                 array_push($arrayCount, $subdr);
             }
-        }
+        }  //taruh barang 1 - 1 dari antecedent A kedalam array
 
-        // return $arrayCount;
 
-        $jumlah = array_count_values($arrayCount);
+
+        $jumlah = array_count_values($arrayCount); //jumlah barang AUB + tptal barang
+
+        // dd($jumlah); //di gabung seluruh AUB
 
         $hasil = [];
 
@@ -101,17 +111,23 @@ class frontendController extends Controller
             // return $support*$confidence;
             $isi = [
                 "value" => $confidence * $support,
-                "key" => $key
+                "key" => $key,
+                "confidence" => $confidence,
+                "support" => $support
             ];
             array_push($hasil, $isi);
-        }
-        // dd($hasil);
+        } //108 - 119 perhitungan confidence, support dan apriori
+
+        // dd($hasil); //sebelum sorting
+
         usort($hasil, function ($a, $b) {
             if ($a == $b) {
                 return 0;
             }
-            return ($a < $b) ? -1 : 1;
+            return ($a > $b) ? -1 : 1;
         });
+
+        // dd($hasil); //sesudah sorting terbesar ke terkecil
 
         $historyExist = count($hasil) >= 1; //check if history exist
 
@@ -119,26 +135,16 @@ class frontendController extends Controller
         $data = [];
         $limit = 4;
         foreach ($hasil as $key => $value) {
-            // if ($i == 0) {
-            //     $product1 = product::find($value['key']);
-            //     array_push($data, $product1);
-            // } else if ($i == 1) {
-            //     $product2 = product::find($value['key']);
-            //     array_push($data, $product2);
-            // } else if ($i == 2) {
-            //     $product3 = product::find($value['key']);
-            //     array_push($data, $product3);
-            // } else if ($i == 3) {
-            //     $product4 = product::find($value['key']);
-            //     array_push($data, $product4);
-            // }
-            // $i++; //stupid code
+
             //==> better code 
-            if ($key + 1 >= $limit) {
+            if ($key + 1 <= $limit) {
                 $newProduk = product::find($value['key']);
                 array_push($data, $newProduk);
             }
-        }
+        } //di ambil 4 barang
+
+        // dd($data); //check 4 barang rekomendasi apriori
+
         if (count($data) <= 0) {
             //kie wik default ketika pertama ngisi
             $katz = $product->id_kategori;
