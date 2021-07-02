@@ -46,12 +46,13 @@ class frontendController extends Controller
             }
             return abort(404);
         } catch (\Throwable $th) {
-            $f = frontend::find(1);
-            $paginate = $f->pagination;
-            $data = product::paginate($paginate);
-            $cat = categories::all();
-            $active = 'Semua';
-            return view("frontend.index", compact('data', 'cat', 'active'));
+            // $f = frontend::find(1);
+            // $paginate = $f->pagination;
+            // $data = product::paginate($paginate);
+            // $cat = categories::all();
+            // $active = 'Semua';
+            // return view("frontend.index", compact('data', 'cat', 'active'));
+            return abort(404);
         }
     }
 
