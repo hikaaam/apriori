@@ -7,6 +7,7 @@ use App\product;
 use App\transaction;
 use App\frontend;
 use App\akun;
+use App\categories;
 use App\Mail\NotifMail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -25,7 +26,33 @@ class frontendController extends Controller
         $f = frontend::find(1);
         $paginate = $f->pagination;
         $data = product::paginate($paginate);
-        return view("frontend.index", compact('data'));
+        $cat = categories::all();
+        $active = 'Semua';
+        return view("frontend.index", compact('data', 'cat', 'active'));
+    }
+
+    public function select($id)
+    {
+        try {
+            $cat = categories::all();
+            foreach ($cat as $key => $value) {
+                if ($id === $value->nama_kategori) {
+                    $f = frontend::find(1);
+                    $paginate = $f->pagination;
+                    $data = product::where("id_kategori", $value->id)->paginate($paginate);
+                    $active = $value->nama_kategori;
+                    return view("frontend.index", compact('data', 'cat', 'active'));
+                }
+            }
+            return abort(404);
+        } catch (\Throwable $th) {
+            $f = frontend::find(1);
+            $paginate = $f->pagination;
+            $data = product::paginate($paginate);
+            $cat = categories::all();
+            $active = 'Semua';
+            return view("frontend.index", compact('data', 'cat', 'active'));
+        }
     }
 
     /**

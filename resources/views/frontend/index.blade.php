@@ -6,6 +6,20 @@
 </div>
 @endisset
 <div class="row">
+    <div class="col-sm-12" style="margin-bottom: 1vh">
+        <a class="btn btn-{{$active === "Semua" ? "info":"success"}}" style="color:white" href="/">
+            {{"Semua"}}
+        </a>
+        @foreach ($cat as $item)
+            <a class="btn btn-{{$active === $item->nama_kategori ? "info":"success"}}" style="color:white"
+                href="{{url('/cat',[$item->nama_kategori])}}"
+                >
+                {{$item->nama_kategori}}
+            </a>
+        @endforeach
+    </div>
+</div>
+<div class="row">
     @foreach ($data as $item)
     <div class="col-sm-3">
         <a href="{{ url('product', [$item->id]) }}">
