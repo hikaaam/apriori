@@ -35,7 +35,7 @@
         <div class="show-apriori">
             <div class="row">
                 @if($historyExist)
-                <p class="col-sm-12"><b>User yang beli ini juga membeli barang ini :</b></p>
+                <p class="col-sm-12"><b>Rekomendasi Produk :</b></p>
                 @foreach ($data as $item)
                 <div id="show-apriori-item" class="col-sm-6">
                     <div class="card">

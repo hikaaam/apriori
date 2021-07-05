@@ -70,7 +70,7 @@ class frontendController extends Controller
         $jumlah_transaksi = count($seluruhTransaksi); //jumlah total transaksi
 
         // dd($jumlah_transaksi); //total seluruh transaksi
-        // dd($jumlah_antecedent); //total ancedent A
+        // dd($jumlah_antecedent); //total atecedent A
         // dd($id_transaksi); //atencedent A
 
         $dataRaw = [];
@@ -99,7 +99,7 @@ class frontendController extends Controller
 
 
 
-        $jumlah = array_count_values($arrayCount); //jumlah barang AUB + tptal barang
+        $jumlah = array_count_values($arrayCount); //jumlah barang AUB + total barang
 
         // dd($jumlah); //di gabung seluruh AUB
 
