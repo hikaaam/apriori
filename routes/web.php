@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', "frontendController@index");
+Route::get('/cat/{id}', "frontendController@select");
 Route::post('/search', "frontendController@search");
 
 //Resource

@@ -2,7 +2,7 @@
 @section('content')
 <div>
     <h1>
-        <a style="color:navy" href="{{ url()->previous() }}"><i class="fa fa-chevron-left"></i></a>
+        <a style="color:navy" href="{{ url('/') }}"><i class="fa fa-chevron-left"></i></a>
     </h1>
 </div>
 <div class="row">
