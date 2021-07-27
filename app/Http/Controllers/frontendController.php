@@ -198,10 +198,19 @@ class frontendController extends Controller
     {
         $id = $request->search;
         $f = frontend::find(1);
+        $active = $request->active ?? 'Semua';
+        // dd($active);
+        $cat = categories::all();
         $paginate = $f->pagination;
-        $data = product::where('nama_barang', 'like', "%" . $id . "%")->paginate($paginate);
+        if ($active == 'Semua') {
+            $data = product::where('nama_barang', 'like', "%" . $id . "%")->paginate($paginate);
+        } else {
+            $idCat = categories::select('id')->where('nama_kategori', $active)->first();
+            $data = product::where('nama_barang', 'like', "%" . $id . "%")->where('id_kategori', $idCat->id)->paginate($paginate);
+        }
+
         $message = "Search Result of " . $id;
-        return view("frontend.index", compact('data', 'message'));
+        return view("frontend.index", compact('data', 'cat', 'active', 'message'));
     }
 
     /**

@@ -4,17 +4,15 @@
 use Illuminate\Support\Facades\DB;
 use App\frontend;
 use App\akun;
-if(Session::has('nama')){
-$akun = akun::where('email',Session::get('email'))->get();
-$user_id = $akun[0]['id'];
-}
-else{
-$user_id=0;
+if (Session::has('nama')) {
+    $akun = akun::where('email', Session::get('email'))->get();
+    $user_id = $akun[0]['id'];
+} else {
+    $user_id = 0;
 }
 $cart = DB::select("SELECT t.nama_barang as nama_barang, t.id_barang as id_barang, t.id_transaksi as id_transaksi,
 p.harga as harga, p.img as img FROM transactions as t INNER JOIN products as p ON p.id = t.id_barang WHERE t.status =
 0 AND t.id_user = $user_id");
-
 
 $view = frontend::find(1);
 @endphp
@@ -23,7 +21,7 @@ $view = frontend::find(1);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title> {{config('app.name')}} </title>
+    <title> {{ config('app.name') }} </title>
     <script src="{{ asset('js/app.js') }}" defer></script>
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -258,13 +256,14 @@ $view = frontend::find(1);
             color: black;
             font-size: 1rem;
         }
+
     </style>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a id="logo" class="navbar-brand" href="{{ url('/', []) }}">{{$view->logo}}</a>
+        <a id="logo" class="navbar-brand" href="{{ url('/', []) }}">{{ $view->logo }}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -296,10 +295,10 @@ $view = frontend::find(1);
             </ul>
             <div class="form-inline my-2 my-lg-0">
                 @php
-                $linkhistory = url('history', []);
+                    $linkhistory = url('history', []);
                 @endphp
 
-                <button type="button" style="margin-right: 1em;" onclick="goTo('{{$linkhistory}}')"
+                <button type="button" style="margin-right: 1em;" onclick="goTo('{{ $linkhistory }}')"
                     class="btn btn-warning">History</button>
                 <button type="button" style="margin-right: 1em;" class="btn btn-success" data-toggle="modal"
                     data-target="#cartModal">
@@ -331,76 +330,77 @@ $view = frontend::find(1);
                                     </thead>
                                     <tbody>
                                         @php
-                                        $total = 0;
-                                        $i =0;
+                                            $total = 0;
+                                            $i = 0;
                                         @endphp
                                         @foreach ($cart as $item)
-                                        @if ($i==0)
-                                        <form action="{{ url('product', [$item->id_transaksi]) }}" method="post">
-                                            @csrf
-                                            @method("PUT")
-                                            <input type="hidden" name="id" value="{{$item->id_barang}}">
-                                            <input type="hidden" name="link" value="{{$_SERVER['REQUEST_URI']}}">
-                                            <input class="btn btn-danger" type="hidden" value="delete">
-                                        </form>
-                                        @endif
-
-                                        <tr>
-                                            <td class="w-25">
-                                                <a href="{{ url('product', [$item->id_barang]) }}">
-                                                    <img src="{{ asset($item->img) }}" class="img-fluid img-thumbnail"
-                                                        alt="{{$item->nama_barang}}">
-                                                </a>
-                                            </td>
-                                            <td>{{$item->nama_barang}}</td>
-                                            <td>{{$item->harga}}</td>
-                                            {{-- <td class="qty"><input type="text" class="form-control" id="input1" value="2"></td>
-                <td>178$</td> --}} @php $total = $total+intval($item->harga); @endphp
-
-                                            <td>
+                                            @if ($i == 0)
                                                 <form action="{{ url('product', [$item->id_transaksi]) }}"
                                                     method="post">
                                                     @csrf
                                                     @method("PUT")
-                                                    <input type="hidden" name="id" value="{{$item->id_barang}}">
+                                                    <input type="hidden" name="id" value="{{ $item->id_barang }}">
                                                     <input type="hidden" name="link"
-                                                        value="{{$_SERVER['REQUEST_URI']}}">
-                                                    <input class="btn btn-danger" type="submit" value="delete">
+                                                        value="{{ $_SERVER['REQUEST_URI'] }}">
+                                                    <input class="btn btn-danger" type="hidden" value="delete">
                                                 </form>
-                                            </td>
-                                        </tr>
-                                        @php
-                                        $i++;
-                                        @endphp
-                                        <br>
+                                            @endif
+
+                                            <tr>
+                                                <td class="w-25">
+                                                    <a href="{{ url('product', [$item->id_barang]) }}">
+                                                        <img src="{{ asset($item->img) }}"
+                                                            class="img-fluid img-thumbnail"
+                                                            alt="{{ $item->nama_barang }}">
+                                                    </a>
+                                                </td>
+                                                <td>{{ $item->nama_barang }}</td>
+                                                <td>{{ $item->harga }}</td>
+                                                {{-- <td class="qty"><input type="text" class="form-control" id="input1" value="2"></td>
+                <td>178$</td> --}} @php $total = $total+intval($item->harga); @endphp
+
+                                                <td>
+                                                    <form action="{{ url('product', [$item->id_transaksi]) }}"
+                                                        method="post">
+                                                        @csrf
+                                                        @method("PUT")
+                                                        <input type="hidden" name="id"
+                                                            value="{{ $item->id_barang }}">
+                                                        <input type="hidden" name="link"
+                                                            value="{{ $_SERVER['REQUEST_URI'] }}">
+                                                        <input class="btn btn-danger" type="submit" value="delete">
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            @php
+                                                $i++;
+                                            @endphp
+                                            <br>
                                         @endforeach
                                     </tbody>
                                 </table>
                                 <div class="d-flex justify-content-end">
-                                    <h5>Total: <span class="price text-success">Rp.{{$total}}</span></h5>
+                                    <h5>Total: <span class="price text-success">Rp.{{ $total }}</span></h5>
                                 </div>
                             </div>
                             <div class="modal-footer border-top-0 d-flex justify-content-between">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 @php
-                                if(Session::has('nama')){
-                                if(count($cart)>0){
-                                $id_trans = $item->id_transaksi;
-                                }
-                                else{
-                                $id_trans = 0;
-                                }
-                                }
-                                else{
-                                $id_trans = 0;
-                                }
+                                    if (Session::has('nama')) {
+                                        if (count($cart) > 0) {
+                                            $id_trans = $item->id_transaksi;
+                                        } else {
+                                            $id_trans = 0;
+                                        }
+                                    } else {
+                                        $id_trans = 0;
+                                    }
                                 @endphp
                                 <form action="{{ url('product', [$id_trans]) }}" method="post">
                                     @csrf
                                     @method("PUT")
                                     <input type="hidden" name="update" value="update">
-                                    <input class="btn btn-success"
-                                        type="@if(count($cart)==0){{'hidden'}}@else{{'submit'}}@endif"
+                                    <input class="btn btn-success" type="@if (count($cart)==0) {{ 'hidden' }}@else{{ 'submit' }} @endif"
                                         value="Beli Barang">
                                 </form>
                             </div>
@@ -411,15 +411,15 @@ $view = frontend::find(1);
                     @csrf
                     <input class="form-control mr-sm-2" type="search" name="search" placeholder="Search"
                         aria-label="Search">
-
+                    <input class="" type="hidden" name="active" value={{ $active ?? 'Semua' }} aria-label="Search">
                     <input class="btn btn-outline-success my-2 my-sm-0" type="submit" value="Search">
                 </form>
                 @if (Session::has('nama'))
-                <a style="color:red" href="{{ url('akun/logout', []) }}"> <i style="font-size:20px;margin-left:10px;"
-                        class="fa fa-power-off"></i></a>
+                    <a style="color:red" href="{{ url('akun/logout', []) }}"> <i
+                            style="font-size:20px;margin-left:10px;" class="fa fa-power-off"></i></a>
                 @else
-                <a style="color:green;" href="{{ url('akun', []) }}"><i style="font-size:20px;margin-left:10px;"
-                        class="fa fa-sign-in"></i></a>
+                    <a style="color:green;" href="{{ url('akun', []) }}"><i style="font-size:20px;margin-left:10px;"
+                            class="fa fa-sign-in"></i></a>
                 @endif
             </div>
         </div>
@@ -435,8 +435,8 @@ $view = frontend::find(1);
         <div class="container">
             <div class="row row-pb-md">
                 <div class="col-md-4 fh5co-widget">
-                    <h3>A Little About {{$view->logo}} </h3>
-                    <p class="footer_text">{{$view->tentang}}. </p>
+                    <h3>A Little About {{ $view->logo }} </h3>
+                    <p class="footer_text">{{ $view->tentang }}. </p>
                     {{-- <p class="footer_text"><a class="btn btn-primary" href="#">Button</a></p> --}}
                 </div>
                 <div class="col-md-8">
@@ -444,11 +444,11 @@ $view = frontend::find(1);
                     <div class="col-md-4 col-sm-4 col-xs-6">
                         <ul class="fh5co-footer-links">
                             <li>
-                                <a style="font-size: 1.8em;color:#eee;padding:5%" href="{{$view->github}}"><i
+                                <a style="font-size: 1.8em;color:#eee;padding:5%" href="{{ $view->github }}"><i
                                         class="fa fa-github"></i></a>
-                                <a style="font-size: 1.8em;color:#eee;padding:5%" href="{{$view->facebook}}"><i
+                                <a style="font-size: 1.8em;color:#eee;padding:5%" href="{{ $view->facebook }}"><i
                                         class="fa fa-facebook"></i></a>
-                                <a style="font-size: 1.8em;color:#eee;padding:5%" href="{{$view->instagram}}"><i
+                                <a style="font-size: 1.8em;color:#eee;padding:5%" href="{{ $view->instagram }}"><i
                                         class="fa fa-instagram"></i></a>
                             </li>
                         </ul>
@@ -460,7 +460,7 @@ $view = frontend::find(1);
                 <div class="col-md-12 text-center">
                     <p>
                         <small class="block">&copy; 2020 | All Rights Reserved.</small>
-                        <small class="block">Copyright by : {{$view->copyright}} </small>
+                        <small class="block">Copyright by : {{ $view->copyright }} </small>
                     </p>
                 </div>
             </div>
@@ -468,34 +468,34 @@ $view = frontend::find(1);
         </div>
     </footer>
 
-    @if(session()->has('modal'))
-    <script>
-        $(function () {
-            $("#example1").DataTable({
-                "responsive": true,
-                "autoWidth": false,
+    @if (session()->has('modal'))
+        <script>
+            $(function() {
+                $("#example1").DataTable({
+                    "responsive": true,
+                    "autoWidth": false,
+                });
+                $('#example2').DataTable({
+                    "paging": true,
+                    "lengthChange": false,
+                    "searching": false,
+                    "ordering": true,
+                    "info": true,
+                    "autoWidth": false,
+                    "responsive": true,
+                });
             });
-            $('#example2').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
+            $(document).ready(function() {
+                $('#cartModal').modal('show');
             });
-        });
-        $(document).ready(function() {  
-        $('#cartModal').modal('show');
-        });
-    </script>
+        </script>
     @endif
 
 
     <script>
-        function goTo(url){
-        window.location.replace(url);
-    }
+        function goTo(url) {
+            window.location.replace(url);
+        }
     </script>
 
 </body>
